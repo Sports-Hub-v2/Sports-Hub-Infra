@@ -1,4 +1,4 @@
-<#
+﻿<#
   One-click dev runner for Sports Hub v2 (Windows PowerShell)
   - Ensures .env exists (copies from .env.example if missing)
   - Boots docker compose (MySQL + services)
@@ -31,7 +31,7 @@ $DockerDir  = Join-Path $InfraRoot 'docker'
 $EnvFile    = Join-Path $DockerDir '.env'
 $EnvExample = Join-Path $DockerDir '.env.example'
 
-Write-Info "Sports Hub v2 — Start (one-click)"
+Write-Info "Sports Hub v2 ??Start (one-click)"
 
 # 1) Sanity checks: Docker & Compose
 try { docker version | Out-Null } catch { Write-Err "Docker is not installed or not running."; exit 1 }
@@ -108,9 +108,22 @@ try { $check = Invoke-WebRequest -Uri 'http://localhost:8081/api/auth/accounts?e
 if ($seedNeeded) {
   Write-Info "Seeding dev data..."
   Pop-Location
-  $seedScript = Join-Path $InfraRoot 'seed/seed-dev.ps1'
-  if (-not (Test-Path $seedScript)) { Write-Err "Seed script not found: $seedScript"; exit 1 }
-  & $seedScript
+  $seedScriptKr = Join-Path $InfraRoot 'seed/seed-dev.kr.ps1'
+  $seedScriptEn = Join-Path $InfraRoot 'seed/seed-dev.ps1'
+  if (Test-Path $seedScriptKr) {
+    $pwsh = Get-Command pwsh -ErrorAction SilentlyContinue
+    if ($pwsh) {
+      & $pwsh.Source -NoLogo -NoProfile -File $seedScriptKr
+    } elseif (Test-Path $seedScriptEn) {
+      & $seedScriptEn
+    } else {
+      Write-Err "Seed script not found: $seedScriptKr / $seedScriptEn"; exit 1
+    }
+  } elseif (Test-Path $seedScriptEn) {
+    & $seedScriptEn
+  } else {
+    Write-Err "Seed script not found."; exit 1
+  }
   if ($LASTEXITCODE -ne 0) { Write-Err "Seeding failed"; exit 1 }
   Write-Ok "Seeding completed"
 } else {
