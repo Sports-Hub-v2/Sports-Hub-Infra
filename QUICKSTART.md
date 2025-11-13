@@ -55,7 +55,7 @@ pwsh -File start.ps1 -Rebuild
 
 ### 특정 서비스만 재빌드
 
-```bash
+```powershell
 cd C:\github\fixproject\sports-hub-v2\infra\docker
 
 # recruit 서비스만 재빌드
@@ -67,7 +67,7 @@ docker compose up -d --build recruit-service auth-service
 
 ### 데이터 보존하고 재시작
 
-```bash
+```powershell
 cd C:\github\fixproject\sports-hub-v2\infra\docker
 
 # ✅ 안전: 데이터 보존
@@ -83,7 +83,7 @@ docker compose restart recruit-service
 
 **경고**: 모든 DB 데이터가 삭제됩니다!
 
-```bash
+```powershell
 cd C:\github\fixproject\sports-hub-v2\infra\docker
 
 # 방법 1: MySQL 컨테이너만 재시작
@@ -106,7 +106,7 @@ docker compose up -d
 
 모든 컨테이너, 볼륨, 이미지 삭제 후 재시작:
 
-```bash
+```powershell
 cd C:\github\fixproject\sports-hub-v2\infra\docker
 
 # 1. 모든 것 삭제
@@ -117,7 +117,7 @@ docker compose up -d --build
 
 # 또는 start.ps1 사용
 cd ..
-pwsh -File start.ps1 -Rebuild
+.\start.ps1 -Rebuild
 ```
 
 ---
@@ -126,7 +126,10 @@ pwsh -File start.ps1 -Rebuild
 
 ### 상태 확인
 
-```bash
+```powershell
+# 먼저 docker 디렉토리로 이동
+cd C:\github\fixproject\sports-hub-v2\infra\docker
+
 # 컨테이너 상태
 docker compose ps
 
@@ -145,18 +148,18 @@ docker exec -it sportshub-mysql mysql -u sportshub -psportshub_pw -e "USE sports
 
 ### API 테스트
 
-```bash
+```powershell
 # 헬스체크
-curl http://localhost:8084/ping
+Invoke-WebRequest -Uri http://localhost:8084/ping
 
 # 모집글 목록
-curl http://localhost:8084/api/recruit/posts
+Invoke-WebRequest -Uri http://localhost:8084/api/recruit/posts
 
 # 특정 모집글
-curl http://localhost:8084/api/recruit/posts/1
+Invoke-WebRequest -Uri http://localhost:8084/api/recruit/posts/1
 
-# 신청 목록
-curl http://localhost:8084/api/recruit/posts/1/applications
+# 또는 curl 사용 (PowerShell 7+)
+curl http://localhost:8084/api/recruit/posts
 ```
 
 ---
@@ -165,7 +168,7 @@ curl http://localhost:8084/api/recruit/posts/1/applications
 
 ### `-v` 플래그는 위험합니다
 
-```bash
+```powershell
 # ❌ 위험: 모든 DB 데이터 삭제
 docker compose down -v
 
@@ -180,13 +183,16 @@ docker compose restart
 
 ### 포트 충돌 확인
 
-```bash
+```powershell
 # Windows에서 포트 사용 확인
 netstat -ano | findstr :8084
 netstat -ano | findstr :3306
 
-# 프로세스 종료 (관리자 권한)
-taskkill /PID <PID> /F
+# 프로세스 종료 (관리자 권한 필요)
+taskkill /PID <PID번호> /F
+
+# 또는 PowerShell로 확인
+Get-NetTCPConnection -LocalPort 8084
 ```
 
 ---
@@ -233,7 +239,9 @@ taskkill /PID <PID> /F
 
 ### MySQL이 시작 안 될 때
 
-```bash
+```powershell
+cd C:\github\fixproject\sports-hub-v2\infra\docker
+
 # 로그 확인
 docker compose logs mysql
 
@@ -244,8 +252,10 @@ docker compose up -d
 
 ### 백엔드 서비스가 안 뜰 때
 
-```bash
-# 특정 서비스 로그
+```powershell
+cd C:\github\fixproject\sports-hub-v2\infra\docker
+
+# 특정 서비스 로그 (최근 100줄)
 docker compose logs recruit-service --tail 100
 
 # 재빌드
@@ -254,9 +264,9 @@ docker compose up -d --build recruit-service
 
 ### 연결이 안 될 때
 
-```bash
+```powershell
 # 헬스체크
-curl http://localhost:8084/ping
+Invoke-WebRequest -Uri http://localhost:8084/ping
 
 # MySQL 확인
 docker exec -it sportshub-mysql mysql -u sportshub -psportshub_pw -e "SELECT 1;"

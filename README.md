@@ -59,14 +59,14 @@ sportshub_db (27개 테이블)
 ### 자동화 스크립트 (권장)
 
 ```powershell
-cd infra
-pwsh -File start.ps1
+cd C:\github\fixproject\sports-hub-v2\infra
+.\start.ps1
 ```
 
 ### 수동 실행
 
-```bash
-cd infra/docker
+```powershell
+cd C:\github\fixproject\sports-hub-v2\infra\docker
 docker compose up -d
 ```
 
@@ -100,26 +100,39 @@ docker compose up -d
 ## 🛠️ 개발자 도구
 
 ### 데이터베이스 접속
-```bash
+```powershell
+cd C:\github\fixproject\sports-hub-v2\infra\docker
+
 docker exec -it sportshub-mysql mysql -u sportshub -psportshub_pw
-USE sportshub_db;
-SHOW TABLES;  # 27개
+# MySQL 프롬프트에서:
+# USE sportshub_db;
+# SHOW TABLES;  -- 27개
 ```
 
 ### 테이블 수 확인
-```bash
+```powershell
 docker exec -it sportshub-mysql mysql -u sportshub -psportshub_pw -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='sportshub_db';"
 ```
 
 ### 로그 확인
-```bash
+```powershell
+cd C:\github\fixproject\sports-hub-v2\infra\docker
+
+# 전체 로그
 docker compose logs -f
+
+# 특정 서비스 로그
 docker compose logs -f auth-service
 ```
 
 ### 서비스 재시작
-```bash
+```powershell
+cd C:\github\fixproject\sports-hub-v2\infra\docker
+
+# 전체 재시작
 docker compose restart
+
+# 특정 서비스 재시작
 docker compose restart auth-service
 ```
 
