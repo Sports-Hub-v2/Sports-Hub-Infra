@@ -148,6 +148,8 @@ CREATE TABLE teams (
     win_rate DECIMAL(5,2) DEFAULT 0,
     avg_age DECIMAL(4,1) DEFAULT 0,
 
+    -- Relationships
+    rival_teams JSON COMMENT 'Array of rival team IDs',
 
     -- Status
     status VARCHAR(20) DEFAULT 'ACTIVE' COMMENT 'ACTIVE, INACTIVE, DISBANDED',
@@ -187,22 +189,6 @@ CREATE TABLE team_memberships (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Team memberships';
 
 -- =====================================================
-
-CREATE TABLE team_rivals (
-    team_id BIGINT NOT NULL,
-    rival_team_id BIGINT NOT NULL,
-
-    rivalry_level VARCHAR(20) DEFAULT 'NORMAL' COMMENT 'NORMAL, INTENSE, FRIENDLY',
-    rivalry_desc VARCHAR(255) COMMENT 'Description of rivalry',
-
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    PRIMARY KEY (team_id, rival_team_id),
-    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
-    FOREIGN KEY (rival_team_id) REFERENCES teams(id) ON DELETE CASCADE,
-    INDEX idx_rival_team (rival_team_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Team rivalries';
-
 -- 4. POSTS (Unified: team_notices + recruit_posts + new)
 -- =====================================================
 

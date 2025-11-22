@@ -111,6 +111,19 @@ services:
     networks:
       - sportshub-net
 
+  frontend:
+    build: ../../frontend
+    container_name: sportshub-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - auth-service
+      - user-service
+      - team-service
+      - recruit-service
+    networks:
+      - sportshub-net
+
 networks:
   sportshub-net:
     driver: bridge
