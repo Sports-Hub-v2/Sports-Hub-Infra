@@ -22,7 +22,7 @@ CREATE TABLE accounts (
     password_hash VARCHAR(255) NOT NULL,
 
     -- Role and status
-    role VARCHAR(20) NOT NULL COMMENT 'USER, ADMIN, SUPER_ADMIN',
+    role VARCHAR(20) NOT NULL COMMENT 'USER, ADMIN',
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' COMMENT 'ACTIVE, SUSPENDED, BANNED, DELETED',
 
     -- Verification
