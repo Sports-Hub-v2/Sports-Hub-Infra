@@ -112,7 +112,15 @@ services:
       - sportshub-net
 
   frontend:
-    build: ../../frontend
+    build:
+      context: ../../frontend
+      args:
+        VITE_API_URL: http://43.202.219.106:8080
+        VITE_AUTH_API_URL: http://43.202.219.106:8081
+        VITE_USER_API_URL: http://43.202.219.106:8082
+        VITE_TEAM_API_URL: http://43.202.219.106:8083
+        VITE_RECRUIT_API_URL: http://43.202.219.106:8084
+        VITE_NOTIFICATION_API_URL: http://43.202.219.106:8085
     container_name: sportshub-frontend
     ports:
       - "5173:80"
